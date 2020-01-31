@@ -17,3 +17,25 @@ bin/
 *.iws
 *.iml
 *.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+target/
+
+*.class
+
+# Translations #
+i18n/*.po
+i18n/*.class
+
+.DS_Store
+classes
+out/
+.scannerwork/
+
+.keep

@@ -1,6 +1,5 @@
 package com.intercorp.assessment.utils;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**

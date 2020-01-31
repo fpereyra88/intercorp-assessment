@@ -6,8 +6,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @Builder
@@ -29,6 +27,7 @@ public class ClientModel {
     private int age;
 
     @JsonProperty("birthdate")
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(notes = "The client birth date")
-    private Date birthdate;
+    private String birthdate;
 }

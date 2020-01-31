@@ -46,7 +46,7 @@ public class ClientController {
     @GetMapping("/listclientes")
     @ApiOperation(value = "Get clients information with date of dead", response = ClientDataResponse.class,
             responseContainer = "List")
-    public List<ClientDataResponse> listClients() {
+    public List<ClientDataResponse> listClients() throws JsonProcessingException {
         return clientService.getClientsData();
     }
 }
