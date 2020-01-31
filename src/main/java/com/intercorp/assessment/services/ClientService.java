@@ -50,10 +50,10 @@ public class ClientService {
      * Get the average and standard deviation of the ages of clients
      *
      * @return
+     * * @throws JsonProcessingException
      */
     public KpiClientsResponse getKpiClients() throws JsonProcessingException {
 
-        // TODO retrieve information from the database or API
         ForDynamoDB forDynamoDB = new ForDynamoDB("ClientModelDB", "clientId");
         List<ClientModel> clients = restClient.request(DynamoBuilder.getAllObject(forDynamoDB, URL_BASE + "/all"), HttpMethod.GET, List.class);
 
@@ -70,37 +70,14 @@ public class ClientService {
     }
 
     /**
+     * Get the clients information with estimated date of dead
      *
      * @return
+     * * @throws JsonProcessingException
      */
-    public List<ClientDataResponse> getClientsData() {
-        // TODO retrieve information from the database or API
-        List<ClientModel> clients = new ArrayList<>();
-        clients.add(ClientModel
-                .builder()
-                .name("Juan")
-                .surname("Perez")
-                .age(17)
-                .birthdate(new Date())
-                .build());
-        clients.add(ClientModel
-                .builder()
-                .name("Gabriel")
-                .surname("Perez")
-                .age(89)
-                .build());
-        clients.add(ClientModel
-                .builder()
-                .name("Jose")
-                .surname("Perez")
-                .age(2)
-                .build());
-        clients.add(ClientModel
-                .builder()
-                .name("Pablo")
-                .surname("Perez")
-                .age(99)
-                .build());
+    public List<ClientDataResponse> getClientsData() throws JsonProcessingException {
+        ForDynamoDB forDynamoDB = new ForDynamoDB("ClientModelDB", "clientId");
+        List<ClientModel> clients = restClient.request(DynamoBuilder.getAllObject(forDynamoDB, URL_BASE + "/all"), HttpMethod.GET, List.class);
 
         List<ClientDataResponse> response = new ArrayList<>();
         for (ClientModel client : clients) {
@@ -113,6 +90,12 @@ public class ClientService {
         return response;
     }
 
+    /**
+     * Retrieve the ages attribute of the clients
+     *
+     * @param clients
+     * @return
+     */
     private List<Integer> getAges(List<ClientModel> clients) {
         return clients.stream()
                 .map(ClientModel::getAge)
