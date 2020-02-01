@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,10 +55,8 @@ public class ClientService {
      * @return
      * * @throws JsonProcessingException
      */
-    public KpiClientsResponse getKpiClients() throws JsonProcessingException {
-
-        ForDynamoDB forDynamoDB = new ForDynamoDB("ClientModelDB", "clientId");
-        List<ClientModel> clients = restClient.request(DynamoBuilder.getAllObject(forDynamoDB, URL_BASE + "/all"), HttpMethod.GET, List.class);
+    public KpiClientsResponse getKpiClients() throws JsonProcessingException, ParseException {
+        List<ClientModel> clients = getClientsFromDB();
 
         List<Integer> ages = getAges(clients);
 
@@ -75,9 +76,8 @@ public class ClientService {
      * @return
      * * @throws JsonProcessingException
      */
-    public List<ClientDataResponse> getClientsData() throws JsonProcessingException {
-        ForDynamoDB forDynamoDB = new ForDynamoDB("ClientModelDB", "clientId");
-        List<ClientModel> clients = restClient.request(DynamoBuilder.getAllObject(forDynamoDB, URL_BASE + "/all"), HttpMethod.GET, List.class);
+    public List<ClientDataResponse> getClientsData() throws JsonProcessingException, ParseException {
+        List<ClientModel> clients = getClientsFromDB();
 
         List<ClientDataResponse> response = new ArrayList<>();
         for (ClientModel client : clients) {
@@ -88,6 +88,26 @@ public class ClientService {
         }
 
         return response;
+    }
+
+    private List<ClientModel> getClientsFromDB() throws JsonProcessingException, ParseException {
+        ForDynamoDB forDynamoDB = new ForDynamoDB("ClientModelDB", "clientId");
+        List<LinkedHashMap> clientsFromDB = restClient.request(DynamoBuilder.getAllObject(forDynamoDB, URL_BASE + "/all"), HttpMethod.GET, List.class);
+        return parseClientModelFromDB(clientsFromDB);
+    }
+
+    private List<ClientModel> parseClientModelFromDB(List<LinkedHashMap> clientsFromDB) throws ParseException {
+        List<ClientModel> clients = new ArrayList<>();
+        for (LinkedHashMap client : clientsFromDB) {
+            clients.add(ClientModel.builder()
+                    .name(client.get("name").toString())
+                    .surname(client.get("surname").toString())
+                    .age(Integer.valueOf(client.get("age").toString()))
+                    .birthdate(new SimpleDateFormat("YYYY-mm-dd").parse(client.get("birthdate").toString()))
+                    .build());
+        }
+
+        return clients;
     }
 
     /**

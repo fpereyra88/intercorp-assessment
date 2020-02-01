@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -39,14 +40,14 @@ public class ClientController {
     @GetMapping("/kpideclientes")
     @ApiOperation(value = "Return the average age of clients and the standard deviation",
             response = KpiClientsResponse.class)
-    public KpiClientsResponse getClientsKpi() throws JsonProcessingException {
+    public KpiClientsResponse getClientsKpi() throws JsonProcessingException, ParseException {
         return clientService.getKpiClients();
     }
 
     @GetMapping("/listclientes")
     @ApiOperation(value = "Get clients information with date of dead", response = ClientDataResponse.class,
             responseContainer = "List")
-    public List<ClientDataResponse> listClients() throws JsonProcessingException {
+    public List<ClientDataResponse> listClients() throws JsonProcessingException, ParseException {
         return clientService.getClientsData();
     }
 }

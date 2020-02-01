@@ -18,55 +18,10 @@ public class DynamoBuilder {
         return body;
     }
 
-    public static Map getObject(Map<String, String> param, ForDynamoDB forDynamoDB) {
-        HashMap<String, Map> body = bodyParameters(forDynamoDB);
-        body.put("object", param);
-        return body;
-    }
-
-    public static String getObject(Map<String, String> param, ForDynamoDB forDynamoDB, String urlbase) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(urlbase)
-                .queryParams(buildMultiValueMap(forDynamoDB))
-                .queryParams(buildMultiValueMap(param));
-        return uriComponentsBuilder.toUriString();
-    }
-
-    public static String getObject(Object param, ForDynamoDB forDynamoDB, String urlbase) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(urlbase)
-                .queryParams(buildMultiValueMap(forDynamoDB))
-                .queryParams(buildMultiValueMap(param));
-        return uriComponentsBuilder.toUriString();
-    }
-
     public static String getAllObject(ForDynamoDB forDynamoDB, String urlbase) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(urlbase)
                 .queryParams(buildMultiValueMap(forDynamoDB));
         return uriComponentsBuilder.toUriString();
-    }
-
-    public static String searchObjects(Map<String, String> param, ForDynamoDB forDynamoDB, String urlbase) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(urlbase)
-                .queryParams(buildMultiValueMap(forDynamoDB))
-                .queryParams(buildMultiValueMap(param));
-        return uriComponentsBuilder.toUriString();
-    }
-
-    public static String searchObjects(ForDynamoDB forDynamoDB, String urlbase) {
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(urlbase)
-                .queryParams(buildMultiValueMap(forDynamoDB));
-        return uriComponentsBuilder.toUriString();
-    }
-
-    public static HashMap buildMap(String parameter, String value) {
-        HashMap<String, String> user = new HashMap<>();
-        user.put(parameter, value);
-        return user;
-    }
-
-    public static ForDynamoDB buildSearchParameters(ForDynamoDB forDynamoDB, String filter, String value) {
-        forDynamoDB.setIndexName(filter);
-        forDynamoDB.setSearchPattern(value);
-        return forDynamoDB;
     }
 
     private static MultiValueMap buildMultiValueMap(Object object) {
