@@ -1,5 +1,7 @@
 package com.intercorp.assessment.utils;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,5 +50,20 @@ public class MathUtils {
         double averageOfDiff = sumDiffToAverage / (double) ages.size();
 
         return Math.sqrt(averageOfDiff);
+    }
+
+    /**
+     * Calculate death date based on average age
+     *
+     * @param birthDate
+     * @param average
+     * @return
+     */
+    public static Date estimatedDeathDate(Date birthDate, int average) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(birthDate);
+        calendar.add(Calendar.YEAR, average);
+
+        return calendar.getTime();
     }
 }

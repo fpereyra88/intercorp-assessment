@@ -20,7 +20,7 @@ public class ClientDataResponse {
     @ApiModelProperty(notes = "Client data")
     private ClientModel clientModel;
 
-    @JsonProperty("dead_date")
-    @ApiModelProperty(notes = "Estimated client date of dead")
-    private Date deadDate;
+    @JsonProperty("death_date")
+    @ApiModelProperty(notes = "Estimated client date of death")
+    private Date deathDate;
 }

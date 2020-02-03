@@ -78,24 +78,48 @@ public class ClientService {
      */
     public List<ClientDataResponse> getClientsData() throws JsonProcessingException, ParseException {
         List<ClientModel> clients = getClientsFromDB();
+        int ageAverage = MathUtils.calculateAgeAverage(getAges(clients));
 
         List<ClientDataResponse> response = new ArrayList<>();
         for (ClientModel client : clients) {
             response.add(ClientDataResponse.builder()
                     .clientModel(client)
-                    .deadDate(new Date())
+                    .deathDate(getEstimatedDeathDate(client.getBirthdate(), ageAverage))
                     .build());
         }
 
         return response;
     }
 
+    /**
+     * Calculate estimated death date
+     *
+     * @param birthDate
+     * @param averageAge
+     * @return
+     */
+    private Date getEstimatedDeathDate(Date birthDate, int averageAge) {
+        return MathUtils.estimatedDeathDate(birthDate, averageAge);
+    }
+
+    /**
+     *
+     * @return
+     * @throws JsonProcessingException
+     * @throws ParseException
+     */
     private List<ClientModel> getClientsFromDB() throws JsonProcessingException, ParseException {
         ForDynamoDB forDynamoDB = new ForDynamoDB("ClientModelDB", "clientId");
         List<LinkedHashMap> clientsFromDB = restClient.request(DynamoBuilder.getAllObject(forDynamoDB, URL_BASE + "/all"), HttpMethod.GET, List.class);
         return parseClientModelFromDB(clientsFromDB);
     }
 
+    /**
+     *
+     * @param clientsFromDB
+     * @return
+     * @throws ParseException
+     */
     private List<ClientModel> parseClientModelFromDB(List<LinkedHashMap> clientsFromDB) throws ParseException {
         List<ClientModel> clients = new ArrayList<>();
         for (LinkedHashMap client : clientsFromDB) {
@@ -122,6 +146,10 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     *
+     * @param client
+     */
     private void validateClient(ClientModel client) {
         if (isNull(client) ||
                 isNull(client.getName()) ||
